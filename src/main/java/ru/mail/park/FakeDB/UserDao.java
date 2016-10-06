@@ -65,7 +65,7 @@ public class UserDao {
         for(Map.Entry<Integer, UserProfile> entry: userProfiles.entrySet()){
             Integer key = entry.getKey();
             UserProfile value = entry.getValue();
-            if(login == value.getLogin()){
+            if(login.equals(value.getLogin())){
                 return value;
             }
         }
