@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.mail.park.model.IdResponse;
+import ru.mail.park.model.UserSession;
 import ru.mail.park.servicies.AccountService;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.FakeDB.View;
@@ -38,10 +39,6 @@ public class RegistrationController {
     //-----------------------------------------------------------------------//
     //Controller that processes a request for displaying all users.
     //-----------------------------------------------------------------------//
-    @ApiOperation(value = "Get all users")
-    @ApiResponses(value ={
-        @ApiResponse(code = 200, message = "")
-    })
     @RequestMapping(value = "/api/users", method = RequestMethod.GET)
     public ResponseEntity getAllUsers(){
 
@@ -52,11 +49,6 @@ public class RegistrationController {
     //-----------------------------------------------------------------------//
     //Controller that processes a request for getting user's information by id.
     //-----------------------------------------------------------------------//
-    @ApiOperation(value = "Get user by id")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 404, message = "error: user not exist")
-    })
     @RequestMapping(value = "/api/users/{id}", method = RequestMethod.GET)
     public ResponseEntity getUserById(@PathVariable("id") Integer id){
 
@@ -114,14 +106,14 @@ public class RegistrationController {
         String login = body.getLogin();
         String password = body.getPassword();
 
+        UserSession session;
 
         if(StringUtils.isEmpty(login) || StringUtils.isEmpty(password)){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
         }
-        int session[] = new int[2];
         session  = accountService.addSession(login);
-        if(session[0] != 101) {
-            return ResponseEntity.ok(new SesstionResponse(session[0], session[1]));
+        if(session != null) {
+            return ResponseEntity.ok(new SesstionResponse(session.getIdSession(), session.getIdUser()));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
@@ -167,15 +159,6 @@ public class RegistrationController {
         }
     }
 
-    private static final class ididid{
-        private int id;
-
-        ididid(int id) { this.id = id ;}
-
-        public int getId() {
-            return id;
-        }
-    }
 
     private static final class GetSesstion{
         @JsonView(View.SummaryWithRecipients.class)
@@ -210,23 +193,6 @@ public class RegistrationController {
 
     }
 
-    private static final class SuccessResponseGetUser {
-        private String login;
-        private String password;
-
-        private SuccessResponseGetUser(String login, String password) {
-            this.login = login;
-            this.password = password;
-        }
-
-        //Функция необходима для преобразования см  https://en.wikipedia.org/wiki/Plain_Old_Java_Object
-        @SuppressWarnings("unused")
-        public String getLogin() {
-            return login;
-        }
-        public String getPassword() {return password;}
-
-    }
 
 
 

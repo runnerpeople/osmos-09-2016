@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.mail.park.FakeDB.UserDao;
 import ru.mail.park.model.UserProfile;
+import ru.mail.park.model.UserSession;
 
 import java.nio.file.attribute.UserPrincipal;
 import java.util.Collection;
@@ -41,7 +42,7 @@ public class AccountService {
         return userDao.existingUserByLogin(user);
     }
 
-    public int[] addSession(String user){
+    public UserSession addSession(String user){
 
         return userDao.addSession(user);
     }

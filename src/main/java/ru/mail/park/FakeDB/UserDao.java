@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.mail.park.model.UserProfile;
+import ru.mail.park.model.UserSession;
 
 import java.util.*;
 
@@ -71,18 +72,6 @@ public class UserDao {
         return null;
     }
 
-    public Integer existingSessionByLogin(String login){
-        for(Map.Entry<Integer, UserProfile> entry: userProfiles.entrySet()) {
-            Integer key = entry.getKey();
-            UserProfile value = entry.getValue();
-            if (login.equals(value.getLogin())) {
-                return key;
-            }
-        }
-        return 101;
-    }
-
-
     public Integer addUser(String login, String password, String email){
         final UserProfile userProfile = new UserProfile(login, email, password);
         Random rn = new Random();
@@ -98,18 +87,33 @@ public class UserDao {
     }
 
 
-    public int[] addSession(String login) {
+    public UserSession getIdUserIfExist(String login){
+        UserSession session = new UserSession();
+        for(Map.Entry<Integer, UserProfile> entry: userProfiles.entrySet()) {
+            Integer key = entry.getKey();
+            UserProfile value = entry.getValue();
+            if (login.equals(value.getLogin())) {
+                session.setIdUser(key);
+                return session;
+            }
+        }
+        return null;
+    }
 
 
-        int session[] = new int[2];
 
-        Integer key = existingSessionByLogin(login);
-        Random rn = new Random();
-        Integer keySession = rn.nextInt(100);
-        userSessions.put(keySession, key);
-        session[0] = keySession;
-        session[1] = key;
-        return session;
+    public UserSession addSession(String login) {
+
+        UserSession session = getIdUserIfExist(login);
+        if(session != null) {
+            Random rn = new Random();
+            Integer keySession = rn.nextInt(100);
+            userSessions.put(keySession, session.getIdUser());
+            session.setIdSession(keySession);
+            return session;
+        }
+
+        return null;
     }
 
 

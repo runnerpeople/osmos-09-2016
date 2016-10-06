@@ -7,14 +7,12 @@ import ru.mail.park.FakeDB.View;
  * Created by SergeyCheremisin on 30/09/16.
  */
 public class SesstionResponse {
-        @JsonView(View.Summary.class)
         private Integer sessionid;
-        @JsonView(View.Summary.class)
-        private Integer userId;
+        private Integer userid;
 
-    public SesstionResponse(Integer sessionId, Integer userId) {
-        this.sessionid = sessionId;
-        this.userId = userId;
+    public SesstionResponse(Integer sessionid, Integer userid) {
+        this.sessionid = sessionid;
+        this.userid = userid;
     }
 
     public Integer getSessionId() {
@@ -23,15 +21,15 @@ public class SesstionResponse {
 
     public Integer getUserId() {
 
-        return userId;
+        return userid;
     }
 
 
-    public void setSessionId(Integer sessionId) {
-        this.sessionid = sessionId;
+    public void setSessionId(Integer sessionid) {
+        this.sessionid = sessionid;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUserId(Integer userid) {
+        this.userid = userid;
     }
 }
