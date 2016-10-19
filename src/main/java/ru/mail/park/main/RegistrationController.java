@@ -1,4 +1,5 @@
 package ru.mail.park.main;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +41,7 @@ public class RegistrationController {
     //Controller that processes a request for displaying all users.
     //-----------------------------------------------------------------------//
     @RequestMapping(value = "/api/users", method = RequestMethod.GET)
-    public ResponseEntity getAllUsers(){
+    public ResponseEntity getAllUsers() {
 
         return ResponseEntity.ok(accountService.getAllUsers());
     }
@@ -50,23 +51,22 @@ public class RegistrationController {
     //Controller that processes a request for getting user's information by id.
     //-----------------------------------------------------------------------//
     @RequestMapping(value = "/api/users/{id}", method = RequestMethod.GET)
-    public ResponseEntity getUserById(@PathVariable("id") Integer id){
+    public ResponseEntity getUserById(@PathVariable("id") Integer id) {
 
-        UserProfile user = accountService.getUserById(id);
-        if(user == null){
+        final UserProfile user = accountService.getUserById(id);
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"User not exist\"}");
         }
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 
 
-
     //-----------------------------------------------------------------------//
     //Controller that deletes a user by id.
     //-----------------------------------------------------------------------//
     @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity removeUserById(@PathVariable("id") Integer id){
-        if(!accountService.removeUserById(id)){
+    public ResponseEntity removeUserById(@PathVariable("id") Integer id) {
+        if (!accountService.removeUserById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
         return ResponseEntity.ok("User removed");
@@ -78,21 +78,21 @@ public class RegistrationController {
     //-----------------------------------------------------------------------//
     @JsonView(View.Summary.class)
     @RequestMapping(value = "/api/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity login(@RequestBody RegistrationRequest body){
+    public ResponseEntity login(@RequestBody RegistrationRequest body) {
 
-        String login = body.getLogin();
-        String password = body.getPassword();
-        String email = body.getEmail();
+        final String login = body.getLogin();
+        final String password = body.getPassword();
+        final String email = body.getEmail();
 
-        if(StringUtils.isEmpty(login) || StringUtils.isEmpty(password) || StringUtils.isEmpty(email)){
+        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) || StringUtils.isEmpty(email)) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("{\"error\":\"empty data\"}");
         }
         final UserProfile existingUser = accountService.existingUserByLogin(login);
-        if(existingUser != null){
+        if (existingUser != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"User with this login already exist\"}");
         }
 
-        Integer id = accountService.addUser(login, password, email);
+        final Integer id = accountService.addUser(login, password, email);
 
         return ResponseEntity.ok(new IdResponse(id));
     }
@@ -102,17 +102,15 @@ public class RegistrationController {
     //Controller (servlet?), that processes an authorization request.
     //-----------------------------------------------------------------------//
     @RequestMapping(value = "/api/sessions", method = RequestMethod.POST)
-    public ResponseEntity auth(@RequestBody RegistrationRequest body){
-        String login = body.getLogin();
-        String password = body.getPassword();
+    public ResponseEntity auth(@RequestBody RegistrationRequest body) {
+        final String login = body.getLogin();
+        final String password = body.getPassword();
 
-        UserSession session;
-
-        if(StringUtils.isEmpty(login) || StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
         }
-        session  = accountService.addSession(login);
-        if(session != null) {
+        final UserSession session = accountService.addSession(login);
+        if (session != null) {
             return ResponseEntity.ok(new SesstionResponse(session.getIdSession(), session.getIdUser()));
         }
 
@@ -123,7 +121,7 @@ public class RegistrationController {
     //Controller that processes a request to display sessions.
     //-----------------------------------------------------------------------//
     @RequestMapping(value = "/api/sessions", method = RequestMethod.GET)
-    public ResponseEntity getSessions(){
+    public ResponseEntity getSessions() {
         return ResponseEntity.ok(new GetSesstion(accountService.getSessions()));
     }
 
@@ -131,9 +129,9 @@ public class RegistrationController {
     //Controller that processes a request for deleting a session.
     //-----------------------------------------------------------------------//
     @RequestMapping(value = "/api/sessions/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity removeSessions(@PathVariable("id") Integer id){
+    public ResponseEntity removeSessions(@PathVariable("id") Integer id) {
 
-        if(accountService.removeSessions(id)) {
+        if (accountService.removeSessions(id)) {
             return ResponseEntity.ok("Session finished");
         }
 
@@ -160,7 +158,7 @@ public class RegistrationController {
     }
 
 
-    private static final class GetSesstion{
+    private static final class GetSesstion {
         @JsonView(View.SummaryWithRecipients.class)
         private Collection session;
 
@@ -172,7 +170,7 @@ public class RegistrationController {
             return session;
         }
 
-        public GetSesstion(Collection session) {
+        private GetSesstion(Collection session) {
 
             this.session = session;
         }
@@ -192,8 +190,6 @@ public class RegistrationController {
         }
 
     }
-
-
 
 
 }

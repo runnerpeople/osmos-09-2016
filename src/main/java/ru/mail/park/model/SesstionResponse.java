@@ -7,8 +7,8 @@ import ru.mail.park.FakeDB.View;
  * Created by SergeyCheremisin on 30/09/16.
  */
 public class SesstionResponse {
-        private Integer sessionid;
-        private Integer userid;
+    private Integer sessionid;
+    private Integer userid;
 
     public SesstionResponse(Integer sessionid, Integer userid) {
         this.sessionid = sessionid;

@@ -25,44 +25,40 @@ public class AccountService {
     @Autowired
     private UserDao userDao;
 
-    public Collection<UserProfile> getAllUsers(){
+    public Collection<UserProfile> getAllUsers() {
         return this.userDao.getAllUsers();
     }
 
-    public UserProfile getUserById(Integer id){
+    public UserProfile getUserById(Integer id) {
         return this.userDao.getUserById(id);
     }
 
-    public boolean removeUserById(Integer id){
+    public boolean removeUserById(Integer id) {
         return this.userDao.removeUserById(id);
     }
 
-    public UserProfile existingUserByLogin(String user){
+    public UserProfile existingUserByLogin(String user) {
 
         return userDao.existingUserByLogin(user);
     }
 
-    public UserSession addSession(String user){
+    public UserSession addSession(String user) {
 
         return userDao.addSession(user);
     }
 
 
-    public Integer addUser(String login, String password, String email){
-         return this.userDao.addUser(login, password, email);
+    public Integer addUser(String login, String password, String email) {
+        return this.userDao.addUser(login, password, email);
     }
 
-    public Collection getSessions(){
+    public Collection getSessions() {
         return this.userDao.getSessions();
     }
 
-    public boolean  removeSessions(int id){
+    public boolean removeSessions(int id) {
         return this.userDao.removeSessions(id);
     }
-
-
-
-
 
 
 }

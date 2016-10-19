@@ -7,12 +7,12 @@ public class UserSession {
     private Integer idSession;
     private Integer idUser;
 
-    public UserSession(){
+    public UserSession() {
         this.idSession = 0;
         this.idUser = 0;
     }
 
-    public UserSession(Integer idSession, Integer idUser){
+    public UserSession(Integer idSession, Integer idUser) {
         this.idSession = idSession;
         this.idUser = idUser;
     }

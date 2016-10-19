@@ -1,4 +1,4 @@
 /target/
-/.idea/compiler.xml
-/.idea/.name
+/.idea/
 .gitignore
+*.iml

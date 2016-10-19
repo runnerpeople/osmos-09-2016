@@ -15,7 +15,8 @@ public class UserProfile {
         this.password = password;
     }
 
-    public UserProfile(){}
+    public UserProfile() {
+    }
 
 
     public void setLogin(String login) {
@@ -30,7 +31,9 @@ public class UserProfile {
         this.password = password;
     }
 
-    public String getLogin() {return login;}
+    public String getLogin() {
+        return login;
+    }
 
     public String getEmail() {
         return email;

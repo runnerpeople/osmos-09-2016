@@ -22,9 +22,9 @@ import static springfox.documentation.builders.PathSelectors.regex;
  * Created by SergeyCheremisin on 13/09/16.
  */
 
-    @EnableSwagger2
-    @SpringBootApplication
-    public class Application {
+@EnableSwagger2
+@SpringBootApplication
+public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -35,7 +35,7 @@ import static springfox.documentation.builders.PathSelectors.regex;
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedMethods("DELETE","POST", "GET")
+                        .allowedMethods("DELETE", "POST", "GET")
                         .allowedOrigins("*");
             }
         };
