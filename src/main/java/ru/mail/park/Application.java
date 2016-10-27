@@ -50,5 +50,5 @@ public class Application {
                 .paths(PathSelectors.any())
                 .build();
     }
-    
+
 }

@@ -2,11 +2,9 @@ package ru.mail.park.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.mail.park.FakeDB.UserDao;
+import ru.mail.park.implementationDAO.UserDao;
 import ru.mail.park.servicies.AccountService;
-import ru.mail.park.model.UserProfile;
 
-import static org.junit.Assert.*;
 /**
  * Created by SergeyCheremisin on 21/10/2016.
  */

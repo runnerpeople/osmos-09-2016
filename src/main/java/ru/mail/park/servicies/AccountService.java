@@ -2,15 +2,11 @@ package ru.mail.park.servicies;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-//import sun.plugin.util.UserProfile;
-import org.springframework.web.bind.annotation.PathVariable;
-import ru.mail.park.FakeDB.UserDao;
+
+import ru.mail.park.implementationDAO.UserDao;
 import ru.mail.park.model.SessionClass;
 import ru.mail.park.model.UserProfile;
-import ru.mail.park.model.UserSession;
 
-import javax.annotation.Resource;
-import java.nio.file.attribute.UserPrincipal;
 import java.util.*;
 
 
@@ -24,7 +20,7 @@ public class AccountService {
     @Autowired
     private UserDao userDao;
 
-    public List getAllUsers() {
+    public List<UserProfile> getAllUsers() {
         return this.userDao.getAllUsers();
     }
 
@@ -47,12 +43,13 @@ public class AccountService {
     }
 
 
-    public Integer addUser(String login, String password, String email) {
-        return this.userDao.addUser(login, password, email);
+    public Integer addUser(String login, String name, String password, String email) {
+        return this.userDao.addUser(login, name, password, email);
     }
 
-    public Collection getSessions() {
-        return this.userDao.getSessions();
+
+    public Integer getSessionById(Integer id){
+        return userDao.getSessionById(id);
     }
 
     public boolean removeSessions(int id) {

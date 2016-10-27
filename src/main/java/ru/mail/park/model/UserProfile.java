@@ -11,16 +11,16 @@ import javax.persistence.*;
 
 @Component
 @Entity
-@Proxy(lazy=false)
+@Proxy(lazy = false)
 @Table(name = "Users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "Login"),
-        @UniqueConstraint(columnNames = "Email") })
+        @UniqueConstraint(columnNames = "Email")})
 public class UserProfile {
 
     @Id
     @Column(name = "User_id")
-    @GenericGenerator(name="kaugen" , strategy="increment")
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GenericGenerator(name = "kaugen", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Integer id;
 
     @NotEmpty

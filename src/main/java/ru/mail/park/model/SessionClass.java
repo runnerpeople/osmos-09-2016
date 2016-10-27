@@ -1,11 +1,13 @@
 package ru.mail.park.model;
 
+
+//import org.hibernate.annotations.Entity;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
+//import org.hibernate.annotations.Table;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Component;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,23 +19,23 @@ import javax.persistence.*;
 @Table(name = "Sessions")
 public class SessionClass {
 
-
     @Id
     @Column(name = "Session_id")
-    @GenericGenerator(name="kaugen" , strategy="increment")
-    @GeneratedValue(strategy= GenerationType.TABLE)
-    Integer Session_id;
+    @GenericGenerator(name = "kaugen", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.TABLE)
+//    @javax.persistence.Id
+    private Integer Session_id;
 
     @NotEmpty
     @Column
-    Integer User_id;
+    private Integer User_id;
 
 
     public SessionClass(Integer user_id) {
         User_id = user_id;
     }
 
-    public SessionClass(){
+    public SessionClass() {
         User_id = null;
     }
 

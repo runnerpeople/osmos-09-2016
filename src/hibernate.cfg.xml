@@ -6,11 +6,12 @@
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/osmos_db</property>
-        <property name="hibernate.connection.password">661900george</property>
-        <property name="hibernate.connection.username">runnerpeople</property>
+        <property name="hibernate.connection.password">sergey90x</property>
+        <property name="hibernate.connection.username">sergey90x</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="show_sql">true</property>
         <property name="hbm2ddl.auto">update</property>
         <mapping class="ru.mail.park.model.UserProfile"/>
+        <mapping class="ru.mail.park.model.SessionClass"/>
     </session-factory>
 </hibernate-configuration>

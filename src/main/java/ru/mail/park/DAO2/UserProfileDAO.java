@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserProfileDAO {
 
-    public Integer addNewUser(String login, String email, String password);
+    public Integer addNewUser(String login, String name, String email, String password);
 
     public List<UserProfile> getAllUsers();
 
