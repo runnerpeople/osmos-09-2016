@@ -1,0 +1,1 @@
+insert into Persons (LastName, FirstName, Address, City) values('Beach', 'Fich', 'hell', 'Moscow')

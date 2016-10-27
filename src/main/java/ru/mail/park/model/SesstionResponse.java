@@ -1,7 +1,5 @@
 package ru.mail.park.model;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import ru.mail.park.FakeDB.View;
 
 /**
  * Created by SergeyCheremisin on 30/09/16.

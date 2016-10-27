@@ -1,5 +1,6 @@
 package ru.mail.park;
 
+import org.eclipse.jetty.websocket.common.SessionFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
@@ -49,4 +50,5 @@ public class Application {
                 .paths(PathSelectors.any())
                 .build();
     }
+    
 }

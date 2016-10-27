@@ -7,31 +7,33 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import ru.mail.park.model.IdResponse;
-import ru.mail.park.model.UserSession;
+import ru.mail.park.exception.UserNotFoundException;
+import ru.mail.park.model.*;
 import ru.mail.park.servicies.AccountService;
-import ru.mail.park.model.UserProfile;
 import ru.mail.park.FakeDB.View;
-import ru.mail.park.model.SesstionResponse;
 import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
 /**
  * Created by SergeyCheremisin on 13/09/16.
  */
 
-//@Api(basePath ="/api/users", description = "Operation with task", produces = "applicatoin/json")
 @EnableSwagger2
 @RestController
+@Scope("request")
 public class RegistrationController {
+
 
     @Autowired
     private AccountService accountService;
@@ -51,7 +53,7 @@ public class RegistrationController {
     //Controller that processes a request for getting user's information by id.
     //-----------------------------------------------------------------------//
     @RequestMapping(value = "/api/users/{id}", method = RequestMethod.GET)
-    public ResponseEntity getUserById(@PathVariable("id") Integer id) {
+    public ResponseEntity getUserById(@PathVariable("id") Integer id) throws UserNotFoundException {
 
         final UserProfile user = accountService.getUserById(id);
         if (user == null) {
@@ -101,18 +103,21 @@ public class RegistrationController {
     //-----------------------------------------------------------------------//
     //Controller (servlet?), that processes an authorization request.
     //-----------------------------------------------------------------------//
+
     @RequestMapping(value = "/api/sessions", method = RequestMethod.POST)
-    public ResponseEntity auth(@RequestBody RegistrationRequest body) {
+    public ResponseEntity auth(@RequestBody RegistrationRequest body, HttpSession session_p) {
         final String login = body.getLogin();
         final String password = body.getPassword();
 
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
         }
-        final UserSession session = accountService.addSession(login);
+        final SessionClass session = accountService.addSession(login);
+        session_p.setAttribute("User", session);
         if (session != null) {
-            return ResponseEntity.ok(new SesstionResponse(session.getIdSession(), session.getIdUser()));
+            return ResponseEntity.ok(new SesstionResponse(session.getSession_id(), session.getUser_id()));
         }
+
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
     }
@@ -141,11 +146,16 @@ public class RegistrationController {
 
     private static final class RegistrationRequest {
         private String login;
+        private String name;
         private String password;
         private String email;
 
         public String getLogin() {
             return login;
+        }
+
+        public String getName() {
+            return name;
         }
 
         public String getPassword() {

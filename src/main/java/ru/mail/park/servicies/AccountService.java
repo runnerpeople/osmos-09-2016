@@ -5,14 +5,13 @@ import org.springframework.stereotype.Service;
 //import sun.plugin.util.UserProfile;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.mail.park.FakeDB.UserDao;
+import ru.mail.park.model.SessionClass;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.model.UserSession;
 
+import javax.annotation.Resource;
 import java.nio.file.attribute.UserPrincipal;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 
 /**
@@ -25,7 +24,7 @@ public class AccountService {
     @Autowired
     private UserDao userDao;
 
-    public Collection<UserProfile> getAllUsers() {
+    public List getAllUsers() {
         return this.userDao.getAllUsers();
     }
 
@@ -42,9 +41,9 @@ public class AccountService {
         return userDao.existingUserByLogin(user);
     }
 
-    public UserSession addSession(String user) {
+    public SessionClass addSession(String login) {
 
-        return userDao.addSession(user);
+        return userDao.addSession(login);
     }
 
 
