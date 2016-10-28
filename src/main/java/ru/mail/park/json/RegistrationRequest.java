@@ -1,5 +1,4 @@
-package ru.mail.park.ResponseInJson;
-
+package ru.mail.park.json;
 
 public class RegistrationRequest {
     private String login;

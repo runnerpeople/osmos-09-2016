@@ -4,81 +4,52 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import ru.mail.park.model.SessionClass;
 
-import javax.swing.*;
 
 @Repository
 public class SessionClassImpl implements SessionClassDAO {
 
-    public SessionClass createSession(Integer user_id) {
+    public static String error_string = "";
+
+
+    private SessionClass getSession(Integer id) {
         Session session = null;
-        SessionClass sessionClass = new SessionClass(user_id);
+        SessionClass sessionClass = null;
         try {
             session = HabernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
-            session.save(sessionClass);
-            session.getTransaction().commit();
+            sessionClass = session.load(SessionClass.class, id);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка при вставке", JOptionPane.OK_OPTION);
+            error_string = e.getMessage();
+            sessionClass = null;
         } finally {
             if (session != null && session.isOpen()) {
-
                 session.close();
             }
         }
         return sessionClass;
     }
 
+    public SessionClass createSessionById(Integer user_id) {
+        SessionClass sessionClass = new SessionClass(user_id);
+        SessionClassCommit<SessionClass> commit = new SessionClassCommit<>();
+        return commit.createSession(sessionClass);
+    }
 
     public Integer getSessionById(Integer id) {
-        Session session = null;
-        SessionClass sessionClass = null;
-        try {
-            session = HabernateUtil.getSessionFactory().openSession();
-            sessionClass = (SessionClass) session.load(SessionClass.class, id);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка 'findById'", JOptionPane.OK_OPTION);
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-
-        return sessionClass.getUser_id();
+        SessionClass sessions = getSession(id);
+        return (sessions == null) ? -1 : sessions.getUser_id();
     }
 
-
     public SessionClass getSessionObj(Integer id) {
-        Session session = null;
-        SessionClass sessionClass = null;
-        try {
-            session = HabernateUtil.getSessionFactory().openSession();
-            sessionClass = (SessionClass) session.load(SessionClass.class, id);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка 'findById'", JOptionPane.OK_OPTION);
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-        return sessionClass;
+        return getSession(id);
     }
 
 
     public boolean removeSessionById(Integer id) {
         SessionClass sessionClass = getSessionObj(id);
-        Session session = null;
-        try {
-            session = HabernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
-            session.delete(sessionClass);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка 'findById'", JOptionPane.OK_OPTION);
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-        return true;
+        SessionClassCommit<SessionClass> commit = new SessionClassCommit<>();
+        Boolean status = commit.removeSession(sessionClass);
+        if (!status)
+            error_string = commit.error_string;
+        return status;
     }
 }

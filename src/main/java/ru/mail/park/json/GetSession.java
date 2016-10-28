@@ -1,8 +1,5 @@
-package ru.mail.park.ResponseInJson;
+package ru.mail.park.json;
 
-/**
- * Created by serqeycheremisin on 27/10/2016.
- */
 public class GetSession {
     private Integer userid;
 
@@ -11,7 +8,6 @@ public class GetSession {
     }
 
     public Integer getUserId() {
-
         return userid;
     }
 }

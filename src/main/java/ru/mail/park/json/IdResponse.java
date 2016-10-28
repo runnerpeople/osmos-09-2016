@@ -1,11 +1,8 @@
-package ru.mail.park.ResponseInJson;
+package ru.mail.park.json;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import ru.mail.park.implementationDAO.View;
 
-/**
- * Created by serqeycheremisin on 27/10/2016.
- */
 public class IdResponse {
     @JsonView(View.Summary.class)
     private Integer userid;
@@ -19,7 +16,6 @@ public class IdResponse {
     }
 
     public Integer getId() {
-
         return userid;
     }
 }

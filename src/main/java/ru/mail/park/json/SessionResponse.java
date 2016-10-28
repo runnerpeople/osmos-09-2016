@@ -1,13 +1,10 @@
-package ru.mail.park.ResponseInJson;
+package ru.mail.park.json;
 
-/**
- * Created by serqeycheremisin on 27/10/2016.
- */
-public class SesstionResponse {
+public class SessionResponse {
     private Integer sessionid;
     private Integer userid;
 
-    public SesstionResponse(Integer sessionid, Integer userid) {
+    public SessionResponse(Integer sessionid, Integer userid) {
         this.sessionid = sessionid;
         this.userid = userid;
     }
@@ -17,10 +14,8 @@ public class SesstionResponse {
     }
 
     public Integer getUserId() {
-
         return userid;
     }
-
 
     public void setSessionId(Integer sessionid) {
         this.sessionid = sessionid;

@@ -1,6 +1,5 @@
 package ru.mail.park.controller;
 
-import com.sun.tools.javac.comp.Todo;
 import org.eclipse.jetty.io.RuntimeIOException;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.Before;
@@ -34,8 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.description;
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.title;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.containsInAnyOrder;

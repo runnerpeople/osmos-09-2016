@@ -5,7 +5,7 @@ import ru.mail.park.model.SessionClass;
 
 public interface SessionClassDAO {
 
-    public SessionClass createSession(Integer user_id);
+    public SessionClass createSessionById(Integer user_id);
 
     public Integer getSessionById(Integer id);
 

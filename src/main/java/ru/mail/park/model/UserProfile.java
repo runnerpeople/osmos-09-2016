@@ -5,22 +5,20 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
 
-
 import javax.persistence.*;
-
 
 @Component
 @Entity
-@Proxy(lazy = false)
+@Proxy(lazy=false)
 @Table(name = "Users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "Login"),
-        @UniqueConstraint(columnNames = "Email")})
+        @UniqueConstraint(columnNames = "Email") })
 public class UserProfile {
 
     @Id
     @Column(name = "User_id")
-    @GenericGenerator(name = "kaugen", strategy = "increment")
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GenericGenerator(name="kaugen" , strategy="increment")
+    @GeneratedValue(strategy=GenerationType.TABLE)
     private Integer id;
 
     @NotEmpty
@@ -43,15 +41,14 @@ public class UserProfile {
         this.password = password;
     }
 
-    public UserProfile(String login, String name, String email, String password) {
-        this.login = login;
+    public UserProfile(String name, String login, String email, String password) {
         this.name = name;
+        this.login = login;
         this.email = email;
         this.password = password;
     }
 
-    public UserProfile() {
-    }
+    public UserProfile() {}
 
     public void setId(Integer id) {
         this.id = id;

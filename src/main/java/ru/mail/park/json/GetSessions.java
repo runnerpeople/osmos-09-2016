@@ -1,14 +1,11 @@
-package ru.mail.park.ResponseInJson;
+package ru.mail.park.json;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import ru.mail.park.implementationDAO.View;
 
 import java.util.Collection;
 
-/**
- * Created by serqeycheremisin on 27/10/2016.
- */
-public class GetSesstion {
+public class GetSessions {
     @JsonView(View.SummaryWithRecipients.class)
     private Collection session;
 
@@ -20,7 +17,7 @@ public class GetSesstion {
         return session;
     }
 
-    public GetSesstion(Collection session) {
+    private GetSessions(Collection session) {
 
         this.session = session;
     }
