@@ -1,1 +1,0 @@
-insert into Users (User_id, Login, Name, Email, Password) values (1,'sergey', 'Sergey', 'cheremsin@mail.ru', 'password11');

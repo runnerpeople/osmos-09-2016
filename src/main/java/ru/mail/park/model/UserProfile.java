@@ -1,38 +1,35 @@
 package ru.mail.park.model;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Proxy;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
-@Component
 @Entity
-@Proxy(lazy=false)
 @Table(name = "Users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "Login"),
         @UniqueConstraint(columnNames = "Email") })
 public class UserProfile {
 
     @Id
-    @Column(name = "User_id")
-    @GenericGenerator(name="kaugen" , strategy="increment")
-    @GeneratedValue(strategy=GenerationType.TABLE)
-    private Integer id;
+    @Column(name = "user_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
 
     @NotEmpty
-    @Column(name = "Login")
+    @Column(name = "login")
     private String login;
 
     @Column(name = "Name")
     private String name;
 
     @NotEmpty
-    @Column(name = "Email")
+    @Column(name = "email",unique = true)
     private String email;
+
+    @JsonIgnore
     @NotEmpty
-    @Column(name = "Password")
+    @Column(name = "password")
     private String password;
 
     public UserProfile(String login, String email, String password) {
@@ -50,7 +47,7 @@ public class UserProfile {
 
     public UserProfile() {}
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,7 +79,7 @@ public class UserProfile {
         return password;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
