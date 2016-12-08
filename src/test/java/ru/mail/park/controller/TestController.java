@@ -1,5 +1,7 @@
 package ru.mail.park.controller;
 
+import com.jayway.jsonpath.JsonPath;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -45,6 +47,21 @@ public class TestController {
     private String email = "test@mail.ru";
     private String password = "password";
 
+    @Before
+    public void createUser() throws Exception {
+        mockMvc.perform(
+                post("/api/users")
+                .content("{\"login\":\"" + login +
+                        "\",\"password\":\"" + password +
+                        "\",\"name\":\"" + name +
+                        "\",\"email\":\"" + email +
+                        "\"}")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.level", is("info")));
+    }
+
     @Test
     public void testGet404() throws Exception {
         mockMvc.perform(
@@ -64,8 +81,24 @@ public class TestController {
 
     @Test
     public void testGetUserById() throws Exception {
-        String id = "1";
+        String id;
         ArrayList<String> params = new ArrayList<>();
+
+        MvcResult result = mockMvc.perform(
+                post("/api/users")
+                .content("{\"login\":\"" + login + "2" +
+                        "\",\"password\":\"" + password + "2" +
+                        "\",\"name\":\"" + name + "2" +
+                        "\",\"email\":\"" + email.replace("test","test2") +
+                        "\"}")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.level", is("info")))
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        assertNotNull(content);
+        id = JsonPath.read(content,"$.message.id").toString();
         params.add(id);
         String uriString = getUriString("/api/users/{id}", params);
         mockMvc.perform(
@@ -73,7 +106,7 @@ public class TestController {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.level", is("info")))
-                .andExpect(jsonPath("$.message.login", is("login")));
+                .andExpect(jsonPath("$.message.login", is("login2")));
     }
 
     @Test
@@ -92,21 +125,21 @@ public class TestController {
 
     @Test
     public void testDeleteUserById() throws Exception {
-        String id = "2";
-        ArrayList<String> params = new ArrayList<>();
-        params.add(id);
-        String uriString = getUriString("/api/users/{id}", params);
+        String id;
         MockHttpSession mockHttpSession = new MockHttpSession();
         mockMvc.perform(
                 post("/api/sessions")
                 .session(mockHttpSession)
-                .content("{\"login\":\"" + login + "1" + "\",\"password\":\"" + password + "1" + "\"}")
+                .content("{\"login\":\"" + login + "\",\"password\":\"" + password + "\"}")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.level", is("info")));
-        assertEquals(login + "1", mockHttpSession.getAttribute("login"));
-        assertEquals(Long.valueOf(id), mockHttpSession.getAttribute("userId"));
+        assertEquals(login, mockHttpSession.getAttribute("login"));
+        id = mockHttpSession.getAttribute("userId").toString();
+        ArrayList<String> params = new ArrayList<>();
+        params.add(id);
+        String uriString = getUriString("/api/users/{id}", params);
         mockMvc.perform(
                 delete(uriString)
                 .session(mockHttpSession))
