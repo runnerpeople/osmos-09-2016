@@ -7,12 +7,21 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Users", uniqueConstraints = {
+<<<<<<< HEAD
         @UniqueConstraint(columnNames = "login"),
         @UniqueConstraint(columnNames = "email") })
 public class UserProfile {
 
     @Id
     @Column(name = "users_id")
+=======
+        @UniqueConstraint(columnNames = "Login"),
+        @UniqueConstraint(columnNames = "Email") })
+public class UserProfile {
+
+    @Id
+    @Column(name = "user_id")
+>>>>>>> 84859dacbb78d97e350aff498af8c28b1a4934da
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
@@ -20,11 +29,19 @@ public class UserProfile {
     @Column(name = "login")
     private String login;
 
+<<<<<<< HEAD
     @Column(name = "name")
     private String name;
 
     @NotEmpty
     @Column(name = "email")
+=======
+    @Column(name = "Name")
+    private String name;
+
+    @NotEmpty
+    @Column(name = "email",unique = true)
+>>>>>>> 84859dacbb78d97e350aff498af8c28b1a4934da
     private String email;
 
     @JsonIgnore
