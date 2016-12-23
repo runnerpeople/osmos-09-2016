@@ -2,10 +2,12 @@ package ru.mail.park.model;
 
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.persistence.Id;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -17,19 +19,19 @@ public class UserSession {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+//    @NotEmpty
     @Column(name = "user_id")
     private Long user_id;
 
     @Column(name = "session_id")
     private String session_id;
 
-    @NotEmpty
+//    @NotEmpty
     @Column(name = "date_session")
     @Temporal(TemporalType.DATE)
     private Date date_session;
 
-    @NotEmpty
+//    @NotEmpty
     @Column(name = "is_auth")
     private Byte is_auth;
 

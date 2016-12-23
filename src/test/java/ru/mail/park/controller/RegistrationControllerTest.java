@@ -401,5 +401,4 @@ public class RegistrationControllerTest {
                 .andExpect(jsonPath("$.level", is("info")));
     }
 
-
 }

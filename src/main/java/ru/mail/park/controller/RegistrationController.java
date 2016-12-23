@@ -107,13 +107,16 @@ public class RegistrationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new Response<>("error",new ErrorMessage("You aren't authenticated. Session is null!")));
         }
-        httpSession.invalidate();
         DateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
+//            System.out.println(httpSession.getAttribute("userId"));
+//            System.out.println(httpSession.getId());
             sessionService.updateSession((Long) httpSession.getAttribute("userId"), null, dateTimeFormat.parse(dateTimeFormat.format(new Date())), (byte) 0);
         } catch (ParseException ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>("error", new ErrorMessage("Exception in Parse(Date)")));
         }
+
+        httpSession.invalidate();
         return ResponseEntity.ok()
                 .body(new Response<>("info","You are log out!"));
     }
@@ -178,6 +181,7 @@ public class RegistrationController {
         final Long userSession = sessionService.addSession(user.getId(),httpSession.getId(),date,(byte)1);
         return ResponseEntity.ok()
                 .body(new Response<>("info",new SessionMessage(httpSession.getId(),user.getId())));
+
     }
 
     @RequestMapping(value = "/api/auth", method = RequestMethod.GET)

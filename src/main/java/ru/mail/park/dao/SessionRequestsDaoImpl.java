@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 @Repository
 public class SessionRequestsDaoImpl implements SessionRequestsDao {
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -29,8 +30,8 @@ public class SessionRequestsDaoImpl implements SessionRequestsDao {
     public UserSession getSession(long user_id) {
         UserSession userSession;
         try {
-            userSession = entityManager.createQuery("SELECT user FROM user_session user" +
-                    "WHERE user.session_id=:userID",UserSession.class)
+            userSession = entityManager.createQuery("SELECT user FROM " + UserSession.class.getName() + " user" +
+                    " WHERE user.user_id=:userID",UserSession.class)
                     .setParameter("userID", user_id)
                     .getSingleResult();
         } catch (NoResultException nre) {
