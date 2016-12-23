@@ -47,5 +47,4 @@ public class AccountService {
         return userDao.addNewUser(name, login, password, email);
     }
 
-
 }

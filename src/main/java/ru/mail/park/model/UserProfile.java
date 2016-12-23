@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.persistence.Id;
 
 @Entity
 @Table(name = "Users", uniqueConstraints = {

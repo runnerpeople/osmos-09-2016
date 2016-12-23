@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class TestService {
+public class AccountServiceTest {
 
     @Autowired
     private AccountService accountService;

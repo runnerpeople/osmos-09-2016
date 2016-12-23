@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 @Transactional
-public class TestController {
+public class RegistrationControllerTest {
 
     @Autowired
     protected MockMvc mockMvc;

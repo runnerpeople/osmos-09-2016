@@ -7,10 +7,18 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.mail.park.json.*;
 import ru.mail.park.model.UserProfile;
+import ru.mail.park.model.UserSession;
 import ru.mail.park.service.AccountService;
+import ru.mail.park.service.SessionService;
 
 
 import javax.servlet.http.HttpSession;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.isNull;
 
@@ -23,6 +31,9 @@ public class RegistrationController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private SessionService sessionService;
 
 
     @RequestMapping(value = "/api/users", method = RequestMethod.GET)
@@ -97,8 +108,19 @@ public class RegistrationController {
                     .body(new Response<>("error",new ErrorMessage("You aren't authenticated. Session is null!")));
         }
         httpSession.invalidate();
+        DateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            sessionService.updateSession((Long) httpSession.getAttribute("userId"), null, dateTimeFormat.parse(dateTimeFormat.format(new Date())), (byte) 0);
+        } catch (ParseException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>("error", new ErrorMessage("Exception in Parse(Date)")));
+        }
         return ResponseEntity.ok()
                 .body(new Response<>("info","You are log out!"));
+    }
+
+    private static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 
 
@@ -119,8 +141,57 @@ public class RegistrationController {
         }
         httpSession.setAttribute("userId",user.getId());
         httpSession.setAttribute("login",login);
+
+        Date date = new Date();
+        DateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dateString = dateTimeFormat.format(date);
+        try {
+            date = dateTimeFormat.parse(dateString);
+        }
+        catch (ParseException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>("error",new ErrorMessage("Exception in Parse(Date)")));
+        }
+        final UserSession session = sessionService.findSessionByUserId(user.getId());
+        if (session != null && (session.getIs_auth() & 1) == 1)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new Response<>("error",new ErrorMessage("This user is registered! You cannot logged in more 1 time..")));
+        if (session != null && session.getSession_id() != null) {
+            Long diff_days;
+            try {
+                diff_days = getDateDiff(session.getDate_session(),dateTimeFormat.parse(dateTimeFormat.format(new Date())),TimeUnit.DAYS);
+            }
+            catch (ParseException ex) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>("error",new ErrorMessage("Exception in Parse(Date)")));
+            }
+            if (diff_days < 30)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new Response<>("error",new ErrorMessage("Error with cookie. Please remove cookie from browser and try again")));
+            else {
+                try {
+                    sessionService.updateSession(user.getId(), httpSession.getId(), dateTimeFormat.parse(dateTimeFormat.format(new Date())), (byte) 1);
+                } catch (ParseException ex) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>("error", new ErrorMessage("Exception in Parse(Date)")));
+                }
+            }
+        }
+
+        final Long userSession = sessionService.addSession(user.getId(),httpSession.getId(),date,(byte)1);
         return ResponseEntity.ok()
                 .body(new Response<>("info",new SessionMessage(httpSession.getId(),user.getId())));
+    }
+
+    @RequestMapping(value = "/api/auth", method = RequestMethod.GET)
+    public ResponseEntity<?> isAuth() {
+        if (httpSession.getId() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new Response<>("error",new ErrorMessage("Access allowed only for registered users")));
+        }
+        final UserSession session = sessionService.findSessionByUserId((Long) httpSession.getAttribute("userId"));
+        if (session.getSession_id().equals(httpSession.getId()) && (session.getIs_auth() & 1) == 1)
+            return ResponseEntity.ok()
+                    .body(new Response<>("info",("User logged in")));
+        else
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>("error", new ErrorMessage("Unknown result in isAuth")));
     }
 
 }
